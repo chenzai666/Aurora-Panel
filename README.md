@@ -1,21 +1,18 @@
 # Aurora Panel
 
-Aurora Panel 是一个基于 GOST 的可视化转发管理面板，包含前端、后端、节点程序与一键安装脚本。
+Aurora Panel 是一个基于 GOST 的可视化转发管理面板。
 
-## 核心能力
+## 界面风格
 
-- 支持 TCP / UDP 转发
-- 支持端口转发与隧道转发
-- 支持用户、隧道、节点管理
-- 支持账号级与隧道级流量控制
-- 支持限速策略与到期策略
-- 支持节点监控、隧道管理拖拽排序
+- 默认采用 Claude 风格的浅色优先设计语言
+- 配色以中性色与语义色为主，避免高饱和干扰色
+- 后台管理页与移动端页面保持统一的视觉体系
+- 支持深浅色主题切换，组件风格保持一致
 
 ## 仓库与镜像
 
 - GitHub: `https://github.com/chenzai666/Aurora-Panel`
-- 前端镜像: `chenzai666/aurora-panel-frontend:v1.4.3`
-- 后端镜像: `chenzai666/aurora-panel-backend:v1.4.3`
+- 镜像版本: `v1.4.3`
 
 ## 快速部署
 
@@ -31,7 +28,7 @@ curl -L https://raw.githubusercontent.com/chenzai666/Aurora-Panel/refs/heads/mai
 curl -L https://raw.githubusercontent.com/chenzai666/Aurora-Panel/refs/heads/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
 ```
 
-## 手动 Docker Compose 部署
+## 手动部署
 
 ### 1) 下载部署文件
 
@@ -59,27 +56,19 @@ EOF
 docker compose -f docker-compose-v4.yml up -d
 ```
 
-### 4) 旧版本升级说明
+### 4) 旧版本升级
 
-如果你是从旧版本升级，请执行一次以下 SQL，避免拖拽排序保存失败：
+如果你是从旧版本升级，请执行一次以下 SQL：
 
 ```sql
 ALTER TABLE node ADD COLUMN inx int(10) NOT NULL DEFAULT 0;
 ALTER TABLE tunnel ADD COLUMN inx int(10) NOT NULL DEFAULT 0;
 ```
 
-## Release 下载
+## Release
 
-- 最新发布（当前）：`v1.4.3`
-- 地址：`https://github.com/chenzai666/Aurora-Panel/releases/tag/v1.4.3`
-- 资产包含：
-  - `install.sh`
-  - `panel_install.sh`
-  - `docker-compose-v4.yml`
-  - `docker-compose-v6.yml`
-  - `gost.sql`
-  - `gost-amd64`
-  - `gost-arm64`
+- 当前版本：`v1.4.3`
+- 下载地址：`https://github.com/chenzai666/Aurora-Panel/releases/tag/v1.4.3`
 
 ## 默认管理员账号
 
