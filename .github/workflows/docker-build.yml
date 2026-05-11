@@ -8,6 +8,16 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/**'
+      - 'vite-frontend/**'
+      - 'springboot-backend/**'
+      - 'go-gost/**'
+      - 'docker-compose-v4.yml'
+      - 'docker-compose-v6.yml'
+      - 'gost.sql'
+      - 'install.sh'
+      - 'panel_install.sh'
 
 jobs:
   check-version:
