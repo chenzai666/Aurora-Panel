@@ -575,7 +575,7 @@ export default function TunnelPage() {
     };
 
     return (
-      <div ref={setNodeRef} style={style}>
+      <div ref={setNodeRef} style={style} className="h-full">
         {renderTunnelCard(tunnel, listeners, attributes)}
       </div>
     );
@@ -588,7 +588,7 @@ export default function TunnelPage() {
     return (
       <Card
         key={tunnel.id}
-        className="rounded-2xl shadow-sm border border-[#e5e0d8] dark:border-[#2d2824] hover:shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-shadow duration-200"
+        className="rounded-2xl shadow-sm border border-[#e5e0d8] dark:border-[#2d2824] hover:shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-shadow duration-200 h-full"
       >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start w-full min-w-0">
@@ -601,7 +601,7 @@ export default function TunnelPage() {
                 }
               />
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-[#1a1a1a] dark:text-[#e8e2da] text-sm break-all leading-5">
+                <h3 className="font-semibold text-[#1a1a1a] dark:text-[#e8e2da] text-sm leading-5 break-words line-clamp-2">
                   {tunnel.name}
                 </h3>
                 <div className="flex items-center gap-1.5 mt-1">
@@ -695,7 +695,7 @@ export default function TunnelPage() {
       {tunnels.length > 0 ? (
         <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
           <SortableContext items={tunnelOrder.length > 0 ? tunnelOrder : tunnels.map((t) => t.id)} strategy={rectSortingStrategy}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 items-stretch">
               {tunnels.map((tunnel) => (
                 <SortableTunnelCard key={tunnel.id} tunnel={tunnel} />
               ))}
