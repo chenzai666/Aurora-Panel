@@ -384,21 +384,69 @@ export default function AdminLayout({
           })()}
         </nav>
 
-        {/* 底部版权信息 */}
-        <div className="px-4 py-2 pb-4 mt-auto flex-shrink-0">
-          <div className="text-center">
-            <p className="text-xs brand-muted">
-              Powered by{" "}
-              <a
-                className="brand-accent hover:underline"
-                href="https://github.com/chenzai666/Aurora-Panel"
-                rel="noopener noreferrer"
-                target="_blank"
+        {/* 侧边栏底部账户管理 */}
+        <div className="px-4 py-3 pb-4 mt-auto flex-shrink-0 border-t border-[#e5e0d8]">
+          <Dropdown placement="top-start">
+            <DropdownTrigger>
+              <button className="w-full rounded-lg px-3 py-2.5 text-left hover:bg-[#f5eee4] transition-colors">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-[#3d352d] truncate">
+                      {username}
+                    </p>
+                    <p className="text-xs brand-muted">
+                      {isAdmin ? "超级管理员" : "普通用户"}
+                    </p>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-[#7f7468] flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="用户菜单">
+              <DropdownItem
+                key="change-password"
+                startContent={
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      clipRule="evenodd"
+                      d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                }
+                onPress={onOpen}
               >
-                Aurora Panel
-              </a>
-            </p>
-          </div>
+                修改密码
+              </DropdownItem>
+              <DropdownItem
+                key="logout"
+                className="text-danger"
+                color="danger"
+                startContent={
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      clipRule="evenodd"
+                      d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                }
+                onPress={handleLogout}
+              >
+                退出登录
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </aside>
 
@@ -434,72 +482,7 @@ export default function AdminLayout({
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* 用户菜单 */}
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Button
-                  className="text-sm font-medium text-[#3d352d]"
-                  variant="light"
-                >
-                  {username}
-                  <svg
-                    className="w-4 h-4 ml-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      clipRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      fillRule="evenodd"
-                    />
-                  </svg>
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="用户菜单">
-                <DropdownItem
-                  key="change-password"
-                  startContent={
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        clipRule="evenodd"
-                        d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
-                        fillRule="evenodd"
-                      />
-                    </svg>
-                  }
-                  onPress={onOpen}
-                >
-                  修改密码
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  className="text-danger"
-                  color="danger"
-                  startContent={
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        clipRule="evenodd"
-                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                        fillRule="evenodd"
-                      />
-                    </svg>
-                  }
-                  onPress={handleLogout}
-                >
-                  退出登录
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+          <div className="flex items-center gap-3" />
         </header>
 
         {/* 主内容 */}
