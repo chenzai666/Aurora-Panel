@@ -1103,7 +1103,9 @@ export default function ForwardPage() {
             ? parsed
             : Array.isArray((parsed as any)?.forwards)
               ? (parsed as any).forwards
-              : null;
+              : Array.isArray((parsed as any)?.forward)
+                ? (parsed as any).forward
+                : null;
 
           if (Array.isArray(arrayCandidate) && arrayCandidate.length > 0) {
             useJsonImport = true;
@@ -1423,7 +1425,6 @@ export default function ForwardPage() {
       return [];
     }
 
-    // 在平铺模式下，只显示当前用户的转发
     let filteredForwards = forwards;
 
     if (viewMode === "direct") {
@@ -1431,7 +1432,10 @@ export default function ForwardPage() {
 
       if (currentUserId !== null) {
         filteredForwards = forwards.filter(
-          (forward) => forward.userId === currentUserId,
+          (forward) =>
+            forward.userId === currentUserId ||
+            forward.userId === undefined ||
+            forward.userId === null,
         );
       }
     }
