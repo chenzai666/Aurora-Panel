@@ -1091,30 +1091,94 @@ export default function ForwardPage() {
     setImportResults([]); // 清空之前的结果
 
     try {
-      const lines = importData
-        .trim()
-        .split("\n")
-        .filter((line) => line.trim());
+      const rawText = importData.trim();
+      let lines: string[] = [];
+      let useJsonImport = false;
+      let parsedJsonArray: Array<Record<string, unknown>> | null = null;
 
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        const parts = line.split("|");
+      if (rawText.startsWith("{") || rawText.startsWith("[")) {
+        try {
+          const parsed = JSON.parse(rawText);
+          const arrayCandidate = Array.isArray(parsed)
+            ? parsed
+            : Array.isArray((parsed as any)?.forwards)
+              ? (parsed as any).forwards
+              : null;
 
-        if (parts.length < 2) {
-          setImportResults((prev) => [
-            {
-              line,
-              success: false,
-              message: "格式错误：需要至少包含目标地址和转发名称",
-            },
-            ...prev,
-          ]);
-          continue;
+          if (Array.isArray(arrayCandidate) && arrayCandidate.length > 0) {
+            useJsonImport = true;
+            parsedJsonArray = arrayCandidate as Array<Record<string, unknown>>;
+          }
+        } catch {
+          useJsonImport = false;
+        }
+      }
+
+      if (!useJsonImport) {
+        lines = rawText.split("\n").filter((line) => line.trim());
+      }
+
+      const iterableEntries = useJsonImport
+        ? parsedJsonArray!.map((entry, index) => ({ entry, index }))
+        : lines.map((line, index) => ({ line, index }));
+
+      for (let idx = 0; idx < iterableEntries.length; idx++) {
+        let line = "";
+        let remoteAddrRaw = "";
+        let nameRaw = "";
+        let inPortRaw: string | undefined = "";
+
+        if (useJsonImport) {
+          const { entry } = iterableEntries[idx] as {
+            entry: Record<string, unknown>;
+            index: number;
+          };
+          const fallbackRemoteAddr =
+            (entry.remoteAddr as string) ??
+            (entry.remote_addr as string) ??
+            (entry.target as string) ??
+            (entry.address as string) ??
+            (entry.addr as string) ??
+            "";
+          const fallbackName =
+            (entry.name as string) ?? (entry.forwardName as string) ?? "";
+          const fallbackPort =
+            entry.inPort ?? entry.in_port ?? entry.port ?? entry.listenPort;
+
+          remoteAddrRaw = String(fallbackRemoteAddr || "").trim();
+          nameRaw = String(fallbackName || "").trim();
+          inPortRaw =
+            fallbackPort === undefined || fallbackPort === null
+              ? ""
+              : String(fallbackPort).trim();
+          line = JSON.stringify(entry);
+        } else {
+          const rawLine = (iterableEntries[idx] as { line: string; index: number }).line;
+          const trimmedLine = rawLine.trim();
+
+          line = trimmedLine;
+          const parts = trimmedLine.split("|");
+
+          if (parts.length < 2) {
+            setImportResults((prev) => [
+              {
+                line,
+                success: false,
+                message: "格式错误：需要至少包含目标地址和转发名称",
+              },
+              ...prev,
+            ]);
+            continue;
+          }
+
+          const [remoteAddr, name, inPort] = parts;
+
+          remoteAddrRaw = remoteAddr.trim();
+          nameRaw = name.trim();
+          inPortRaw = inPort?.trim();
         }
 
-        const [remoteAddr, name, inPort] = parts;
-
-        if (!remoteAddr.trim() || !name.trim()) {
+        if (!remoteAddrRaw || !nameRaw) {
           setImportResults((prev) => [
             {
               line,
@@ -1127,7 +1191,7 @@ export default function ForwardPage() {
         }
 
         // 验证远程地址格式 - 支持单个地址或多个地址用逗号分隔
-        const addresses = remoteAddr.trim().split(",");
+        const addresses = remoteAddrRaw.split(",");
         const addressPattern = /^[^:]+:\d+$/;
         const isValidFormat = addresses.every((addr) =>
           addressPattern.test(addr.trim()),
@@ -1149,7 +1213,7 @@ export default function ForwardPage() {
         // 检查重复：同名转发已存在则跳过
         const isDuplicate = forwards.some(
           (f) =>
-            f.name.trim() === name.trim() &&
+            f.name.trim() === nameRaw &&
             f.tunnelId === selectedTunnelForImport,
         );
 
@@ -1169,8 +1233,8 @@ export default function ForwardPage() {
           // 处理入口端口
           let portNumber: number | null = null;
 
-          if (inPort && inPort.trim()) {
-            const port = parseInt(inPort.trim());
+          if (inPortRaw) {
+            const port = parseInt(inPortRaw);
 
             if (isNaN(port) || port < 1 || port > 65535) {
               setImportResults((prev) => [
@@ -1188,10 +1252,10 @@ export default function ForwardPage() {
 
           // 调用创建转发接口
           const response = await createForward({
-            name: name.trim(),
+            name: nameRaw,
             tunnelId: selectedTunnelForImport, // 使用用户选择的隧道
             inPort: portNumber, // 使用指定端口或自动分配
-            remoteAddr: remoteAddr.trim(),
+            remoteAddr: remoteAddrRaw,
             strategy: "fifo",
           });
 
@@ -1201,7 +1265,7 @@ export default function ForwardPage() {
                 line,
                 success: true,
                 message: "创建成功",
-                forwardName: name.trim(),
+                forwardName: nameRaw,
               },
               ...prev,
             ]);
