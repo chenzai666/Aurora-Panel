@@ -80,7 +80,7 @@ body {
 }
 
 .app-shell {
-  background: transparent;
+  background: var(--color-background-primary);
 }
 
 .app-sidebar {
@@ -96,7 +96,7 @@ body {
 }
 
 .app-content {
-  background: transparent;
+  background: var(--color-background-primary);
 }
 
 .claude-panel {
