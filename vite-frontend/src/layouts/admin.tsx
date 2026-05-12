@@ -388,7 +388,15 @@ export default function AdminLayout({
         <div className="px-4 py-2 pb-4 mt-auto flex-shrink-0">
           <div className="text-center">
             <p className="text-xs brand-muted">
-              Powered by <span className="brand-accent">Aurora Panel</span>
+              Powered by{" "}
+              <a
+                className="brand-accent hover:underline"
+                href="https://github.com/chenzai666/Aurora-Panel"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Aurora Panel
+              </a>
             </p>
           </div>
         </div>

@@ -311,7 +311,15 @@ export default function IndexPage() {
 
         <div className="fixed inset-x-0 bottom-4 text-center py-4">
           <p className="text-xs brand-muted">
-            Powered by <span className="brand-accent">Aurora Panel</span>
+            Powered by{" "}
+            <a
+              className="brand-accent hover:underline"
+              href="https://github.com/chenzai666/Aurora-Panel"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Aurora Panel
+            </a>
           </p>
           <p className="text-xs brand-muted mt-1">
             v{isWebView ? siteConfig.app_version : siteConfig.version}
